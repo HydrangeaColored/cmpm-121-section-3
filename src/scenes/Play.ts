@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 
 import starfieldUrl from "/assets/starfield.png";
 import spaceshipUrl from "/assets/spaceship.png";
+import rocketUrl from "/assets/rocket.png";
 
 export default class Play extends Phaser.Scene {
   fire?: Phaser.Input.Keyboard.Key;
@@ -11,6 +12,7 @@ export default class Play extends Phaser.Scene {
   starfield?: Phaser.GameObjects.TileSprite;
   spinner?: Phaser.GameObjects.Shape;
   spaceShip?: Phaser.GameObjects.Sprite;
+  rocket?: Phaser.GameObjects.Sprite;
 
   rotationSpeed = Phaser.Math.PI2 / 1000; // radians per millisecond
   isFiring = false;
@@ -22,6 +24,7 @@ export default class Play extends Phaser.Scene {
   preload() {
     this.load.image("starfield", starfieldUrl);
     this.load.image("spaceship", spaceshipUrl);
+    this.load.image("rocketship", rocketUrl);
   }
 
   #addKey(
@@ -44,7 +47,8 @@ export default class Play extends Phaser.Scene {
         "starfield",
       )
       .setOrigin(0, 0);
-    this.spinner = this.add.rectangle(100, 430, 50, 50, 0x67b36c);
+    //this.spinner = this.add.rectangle(100, 430, 50, 50, 0x67b36c);
+    this.rocket = this.add.sprite(100, 430, "rocketship");
     this.spaceShip = this.add.sprite(640, 100, "spaceship");
   }
 
@@ -52,13 +56,13 @@ export default class Play extends Phaser.Scene {
   update() {
     this.starfield!.tilePositionX -= 4;
 
-    if (this.left!.isDown) {
+    if (this.left!.isDown && !this.isFiring) {
       //this.spinner!.rotation -= delta * this.rotationSpeed;
-      this.spinner!.x -= 3;
+      this.rocket!.x -= 3;
     }
-    if (this.right!.isDown) {
+    if (this.right!.isDown && !this.isFiring) {
       //this.spinner!.rotation += delta * this.rotationSpeed;
-      this.spinner!.x += 3;
+      this.rocket!.x += 3;
     }
 
     if (this.fire!.isDown) {
@@ -73,16 +77,18 @@ export default class Play extends Phaser.Scene {
       this.isFiring = true;
     }
     if (this.isFiring) {
-      this.spinner!.y -= 3;
+      this.rocket!.y -= 3;
     }
-    if (this.spinner!.y <= 0) {
-      this.spinner!.y = 430;
+    if (this.rocket!.y <= 0) {
+      this.rocket!.y = 430;
       this.isFiring = false;
     }
 
     this.spaceShip!.x -= 3;
     if (this.spaceShip!.x <= 0) {
       this.spaceShip!.x = 640;
+      const randomYRespawn = Math.floor(400 * Math.random());
+      this.spaceShip!.y = randomYRespawn;
     }
   }
 }
