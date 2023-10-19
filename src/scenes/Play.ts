@@ -12,6 +12,7 @@ export default class Play extends Phaser.Scene {
   starfield?: Phaser.GameObjects.TileSprite;
   spinner?: Phaser.GameObjects.Shape;
   spaceShip?: Phaser.GameObjects.Sprite;
+  spaceShipOne?: Phaser.GameObjects.Sprite;
   rocket?: Phaser.GameObjects.Sprite;
 
   rotationSpeed = Phaser.Math.PI2 / 1000; // radians per millisecond
@@ -34,7 +35,7 @@ export default class Play extends Phaser.Scene {
   }
 
   create() {
-    this.fire = this.#addKey("F");
+    this.fire = this.#addKey("ENTER");
     this.left = this.#addKey("LEFT");
     this.right = this.#addKey("RIGHT");
 
@@ -49,7 +50,9 @@ export default class Play extends Phaser.Scene {
       .setOrigin(0, 0);
     //this.spinner = this.add.rectangle(100, 430, 50, 50, 0x67b36c);
     this.rocket = this.add.sprite(100, 430, "rocketship");
+    this.rocket.setScale(2, 2);
     this.spaceShip = this.add.sprite(640, 100, "spaceship");
+    this.spaceShipOne = this.add.sprite(640, 150, "spaceship");
   }
 
   // update(_timeMs: number, delta: number) {
@@ -84,11 +87,18 @@ export default class Play extends Phaser.Scene {
       this.isFiring = false;
     }
 
-    this.spaceShip!.x -= 3;
+    this.spaceShip!.x -= 2;
     if (this.spaceShip!.x <= 0) {
       this.spaceShip!.x = 640;
       const randomYRespawn = Math.floor(400 * Math.random());
       this.spaceShip!.y = randomYRespawn;
+    }
+
+    this.spaceShipOne!.x -= 3;
+    if (this.spaceShipOne!.x <= 0) {
+      this.spaceShipOne!.x = 640;
+      const randomYRespawn = Math.floor(400 * Math.random());
+      this.spaceShipOne!.y = randomYRespawn;
     }
   }
 }
